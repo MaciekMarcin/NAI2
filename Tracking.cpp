@@ -1,4 +1,4 @@
-
+/*
 #include <cv.hpp>
 #include <highgui.h>
 #include <iostream>
@@ -6,242 +6,123 @@
 #include <tuple>
 #include <algorithm>
 #include <list>
-/*
-using namespace cv;
-using namespace std;
-
-int main(int argc, char** argv)
-{
-	VideoCapture cap(0);
-
-	if (cap.isOpened() == false)
-	{
-		return 0;
-	}
-
-	namedWindow("colourDetection", CV_WINDOW_AUTOSIZE); 
-
-	//kolor limonkowy
-	int iLowH = 34;
-	int iHighH = 72;
-	int iLowS = 90;
-	int iHighS = 206;
-	int iLowV = 84;
-	int iHighV = 255;
-
-	//Create trackbars in "Control" window
-	createTrackbar("LowH", "colourDetection", &iLowH, 179);
-	createTrackbar("HighH", "colourDetection", &iHighH, 179);
-	createTrackbar("LowS", "colourDetection", &iLowS, 255); 
-	createTrackbar("HighS", "colourDetection", &iHighS, 255);
-	createTrackbar("LowV", "colourDetection", &iLowV, 255);
-	createTrackbar("HighV", "colourDetection", &iHighV, 255);
-
-	int iLastX = -1;
-	int iLastY = -1;
-	int dilation_size = 10;
-
-	//Capture a temporary image from the camera
-	Mat imgTmp;
-	cap.read(imgTmp);
-
-	//Create a black image with the size as the camera output
-	Mat imgLines = Mat::zeros(imgTmp.size(), CV_8UC3);;
-	
-	auto structElem = getStructuringElement(MORPH_ELLIPSE,
-		Size(2 * dilation_size + 1, 2 * dilation_size + 1),
-		Point(dilation_size, dilation_size)); //wype³nianie
-
-	while (true)
-	{
-		Mat imgOriginal;
-
-		bool bSuccess = cap.read(imgOriginal); // read a new frame from video
-
-		if (!bSuccess) //if not success, break loop
-		{
-			cout << "Cannot read a frame from video stream" << endl;
-			break;
-		}
-
-		Mat imgHSV;
-
-		cvtColor(imgOriginal, imgHSV, COLOR_BGR2HSV); //Konwersja z BGR do HSV
-
-		Mat imgThresholded;
-
-		inRange(imgHSV, Scalar(iLowH, iLowS, iLowV), Scalar(iHighH, iHighS, iHighV), imgThresholded); //Threshold the image
-
-		morphologyEx(imgThresholded, imgThresholded, MORPH_CLOSE, structElem);
-
-		//Calculate the moments of the thresholded image
-		Moments oMoments = moments(imgThresholded);
-
-		double dM01 = oMoments.m01;
-		double dM10 = oMoments.m10;
-		double dArea = oMoments.m00;
-
-		// if the area <= 10000, I consider that the there are no object in the image and it's because of the noise, the area is not zero 
-		if (dArea > 100)//rozmiar obiektu
-		{
-			//Wyznaczanie œrodka obiektu
-			int posX = dM10 / dArea;
-			int posY = dM01 / dArea;
-			int count;
-
-			if (iLastX >= 0 && iLastY >= 0 && posX >= 0 && posY >= 0)
-			{
-				//Draw a red line from the previous point to the current point
-				vector<cv::Point>pointList;
-				//pointList.push_back({ Point(0, 0) });
-				//for (unsigned i = 0; i <= pointList.size(); i++) {
-					line(imgLines, Point(posX, posY), Point(iLastX, iLastY), Scalar(0, 255, 0), 8);
-						//pointList.push_back({ Point(posX, posY) });
-
-					//cout << "Cords = " << Point(iLastX, iLastY) << endl;
-
-					//cout << "Liczba = " << pointList.size()%10 << endl;
-
-			//}
-
-			iLastX = posX;
-			iLastY = posY;
-		}
-
-		flip(imgThresholded, imgThresholded, 1);
-		imshow("colourDetection", imgThresholded); //Obraz z kolorem
-		imgOriginal = imgOriginal + imgLines;
-		flip(imgOriginal, imgOriginal, 1);
-		imshow("cameraImage", imgOriginal); //Obraz z kamery
-
-		if (waitKey(1) == 27)
-		{
-			break;
-		}
-	}
-
-	return 0;
-}*/
-
 
 using namespace cv;
 using namespace std;
 
 int main(int argc, char** argv)
 {
-	VideoCapture cap(0);
 
-	if (cap.isOpened() == false)
+	void line(VideoCapture cap, int imgwidth, int imgheight, int loRange[], int hiRange[]);
 	{
-		return 0;
-	}
 
-	namedWindow("colourDetection", CV_WINDOW_AUTOSIZE);
+		VideoCapture cap(0);
 
-	//kolor limonkowy
-	int iLowH = 34;
-	int iHighH = 72;
-	int iLowS = 90;
-	int iHighS = 206;
-	int iLowV = 84;
-	int iHighV = 255;
-
-	//Create trackbars in "Control" window
-	createTrackbar("LowH", "colourDetection", &iLowH, 179);
-	createTrackbar("HighH", "colourDetection", &iHighH, 179);
-	createTrackbar("LowS", "colourDetection", &iLowS, 255);
-	createTrackbar("HighS", "colourDetection", &iHighS, 255);
-	createTrackbar("LowV", "colourDetection", &iLowV, 255);
-	createTrackbar("HighV", "colourDetection", &iHighV, 255);
-
-	int iLastX = -1;
-	int iLastY = -1;
-	int dilation_size = 10;
-
-	//Capture a temporary image from the camera
-	Mat imgTmp;
-	cap.read(imgTmp);
-
-	//Create a black image with the size as the camera output
-	Mat imgLines = Mat::zeros(imgTmp.size(), CV_8UC3);;
-
-	auto structElem = getStructuringElement(MORPH_ELLIPSE,
-		Size(2 * dilation_size + 1, 2 * dilation_size + 1),
-		Point(dilation_size, dilation_size)); //wype³nianie
-
-	while (true)
-	{
-		Mat imgOriginal;
-
-		bool bSuccess = cap.read(imgOriginal); // read a new frame from video
-
-		if (!bSuccess) //if not success, break loop
+		if (cap.isOpened() == false)
 		{
-			cout << "Cannot read a frame from video stream" << endl;
-			break;
+			return 0;
 		}
 
-		Mat imgHSV;
+		vector < Point > path, smoothedPath;
 
-		cvtColor(imgOriginal, imgHSV, COLOR_BGR2HSV); //Konwersja z BGR do HSV
+		//kolor limonkowy
+		int loRange[3] = { 34,72,90 };
+		int hiRange[3] = { 206,84,255 };
 
-		Mat imgThresholded;
+		namedWindow("colourDetection", CV_WINDOW_AUTOSIZE);
+		createTrackbar("loRange0", "colourDetection", &(loRange[0]), 255);
+		createTrackbar("loRange1", "colourDetection", &(loRange[1]), 255);
+		createTrackbar("loRange2", "colourDetection", &(loRange[2]), 255);
+		createTrackbar("hiRange0", "colourDetection", &(hiRange[0]), 255);
+		createTrackbar("hiRange1", "colourDetection", &(hiRange[1]), 255);
+		createTrackbar("hiRange2", "colourDetection", &(hiRange[2]), 255);
 
-		inRange(imgHSV, Scalar(iLowH, iLowS, iLowV), Scalar(iHighH, iHighS, iHighV), imgThresholded); //Threshold the image
+		line(0, 600, 400, loRange, hiRange);
 
-		morphologyEx(imgThresholded, imgThresholded, MORPH_CLOSE, structElem);
+		int dilation_size = 4;
 
-		//Calculate the moments of the thresholded image
-		Moments oMoments = moments(imgThresholded);
+		Mat imgTmp;
+		cap.read(imgTmp);
 
-		double dM01 = oMoments.m01;
-		double dM10 = oMoments.m10;
-		double dArea = oMoments.m00;
+		//Create a black image with the size as the camera output
+		Mat imgLines = Mat::zeros(imgTmp.size(), CV_8UC3);;
 
-		// if the area <= 10000, I consider that the there are no object in the image and it's because of the noise, the area is not zero 
-		if (dArea > 100)
+		auto structElem = getStructuringElement(MORPH_ELLIPSE,
+			Size(2 * dilation_size + 1, 2 * dilation_size + 1),
+			Point(dilation_size, dilation_size)); //wype³nianie
+
+		while (true)
 		{
-			//calculate the position of the ball
-			int posX = dM10 / dArea;
-			int posY = dM01 / dArea;
-			int count;
+			Mat imgOriginal;
+			bool bSuccess = cap.read(imgOriginal); //odczyt obrazu z kamery
 
-			if (iLastX >= 0 && iLastY >= 0 && posX >= 0 && posY >= 0)
+			Mat imgHSV;
+			cvtColor(imgOriginal, imgHSV, COLOR_BGR2HSV); //Konwersja z BGR do HSV
+
+			Mat imgThresholded;
+			inRange(imgHSV, Scalar(loRange[0], loRange[1], loRange[2]), Scalar(hiRange[0], hiRange[1], hiRange[2]), imgThresholded); //Threshold the image
+
+			morphologyEx(imgThresholded, imgThresholded, MORPH_CLOSE, structElem);
+			Moments oMoments = moments(imgThresholded);			//Calculate the moments of the thresholded image
+
+			double dM01 = oMoments.m01;
+			double dM10 = oMoments.m10;
+			double dArea = oMoments.m00;
+
+			//Wyznaczenie rozmiaru obiektu
+			if (dArea > 100)
 			{
-				//Draw a red line from the previous point to the current point
-				vector<cv::Point>pointList;
-				pointList.push_back({ Point(posX, posY) });
-				for (unsigned i = 0; i < pointList.size(); i++) {
-					line(imgLines, Point(posX, posY), Point(iLastX, iLastY), Scalar(0, 255, 0), 8);
-					//pointList.push_back({ Point(posX, posY) });
-					//cout << "Cords = " << Point(iLastX, iLastY) << endl;
+				//Obliczanie œrodka obiektu
+				int pX = dM10 / dArea;
+				int pY = dM01 / dArea;
 
-					//cout << "Liczba = " << pointList.size() << endl;
+				path.push_back({ pX, pY });
 
-					//system("CLS");
+				vector <Point2f> pathSmooth;
+				approxPolyDP(vector<Point2f>(path.begin(), path.end()), pathSmooth, 40, false);
+
+				smoothedPath.clear();
+				for (auto &point : pathSmooth)														//kopia wyg³adzonej lini do wektora punktów (¿eby póŸniej wyœwietliæ na jego podstawie linie)
+					smoothedPath.push_back({ (int)point.x, (int)point.y });
+
+				if (smoothedPath.size() >= 4) {
+					vector < Point > itr(smoothedPath.end() - 4, smoothedPath.end());
+					int conditions = 0;
+					double factor = (::abs(itr[0].x - itr[1].x) + ::abs(itr[0].y - itr[1].y)) * 2 / 3;
+
+
+					if ((::abs(itr[0].x - itr[1].x) > factor) && (::abs(itr[0].y - itr[1].y) < factor)) {
+						conditions++;
+					}
+					if ((::abs(itr[1].x - itr[2].x) > factor) && (::abs(itr[1].y - itr[2].y) > factor)) {
+						conditions++;
+					}
+					if ((::abs(itr[2].x - itr[3].x) > factor) && (::abs(itr[2].y - itr[3].y) < factor)) {
+						conditions++;
+					}
+
+					if (conditions == 3) {
+						cout << "Jest Z!!!" << endl;
+						path.clear();
+					}
 				}
-				/*
-				for (auto vec : pointList)
-					cout << vec << endl;
-				*/	
-
 			}
 
-			iLastX = posX;
-			iLastY = posY;
-		}
+			polylines(imgOriginal, { smoothedPath }, false, Scalar(0, 255, 0), 3);
+			flip(imgThresholded, imgThresholded, 1);
+			imshow("colourDetection", imgThresholded); //Obraz z kolorem
+			imgOriginal = imgOriginal + imgLines;
+			flip(imgOriginal, imgOriginal, 1);
+			imshow("cameraImage", imgOriginal); //Obraz z kamery
+			//line(imgLines, Point(pX, pY), Point(LastX, LastY), Scalar(0, 255, 0), 8);
 
-		flip(imgThresholded, imgThresholded, 1);
-		imshow("colourDetection", imgThresholded); //Obraz z kolorem
-		imgOriginal = imgOriginal + imgLines;
-		flip(imgOriginal, imgOriginal, 1);
-		imshow("cameraImage", imgOriginal); //Obraz z kamery
-
-		if (waitKey(1) == 27)
-		{
-			break;
+			if (waitKey(1) == 27)
+			{
+				break;
+			}
 		}
 	}
 
 	return 0;
 }
+*/
