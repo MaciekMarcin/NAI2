@@ -371,18 +371,17 @@ void Line(VideoCapture cam, int imgwidth, int imgheight, int loRange[], int hiRa
 
 				}
 
-				double factor = (::abs(itr[0].x - itr[1].x) + ::abs(itr[0].y - itr[1].y)) * 2 / 3;
-
+				double stala = (::abs(itr[0].x - itr[1].x) + ::abs(itr[0].y - itr[1].y)) * 2 / 3; // X albo Y muszą być 0 albo/też musi być jakiś mnożnik gdzie M < 1;
 				//Litera Z
-				if ((::abs(itr[0].x - itr[1].x) > factor) && (::abs(itr[0].y - itr[1].y) < factor)) {
+				if ((::abs(itr[0].x - itr[1].x) > stala) && (::abs(itr[0].y - itr[1].y) < stala)) {
 					//cout << "Pierwsza linia" << endl;
 					conditions++;
 				}
-				if ((::abs(itr[1].x - itr[2].x) > factor) && (::abs(itr[1].y - itr[2].y) > factor)) {
+				if ((::abs(itr[1].x - itr[2].x) > stala) && (::abs(itr[1].y - itr[2].y) > stala)) {
 					//cout << "Druga linia" << endl;
 					conditions++;
 				}
-				if ((::abs(itr[2].x - itr[3].x) > factor) && (::abs(itr[2].y - itr[3].y) < factor)) {
+				if ((::abs(itr[2].x - itr[3].x) > stala) && (::abs(itr[2].y - itr[3].y) < stala)) {
 					//cout << "Trzecia linia" << endl;
 					conditions++;
 				}
@@ -395,11 +394,11 @@ void Line(VideoCapture cam, int imgwidth, int imgheight, int loRange[], int hiRa
 					path.clear();
 				}/*
 				//Litera L
-				if ((::abs(itr[0].x - itr[1].x) > factor) && (::abs(itr[0].y - itr[1].y) < factor)) {
+				if ((::abs(itr[0].x - itr[1].x) > stala) && (::abs(itr[0].y - itr[1].y) < stala)) {
 					//cout << "Pierwsza linia" << endl;
 					conditions2++;
 				}
-				if ((::abs(itr[1].x - itr[2].x) < factor) && (::abs(itr[1].y - itr[2].y) > factor)) {
+				if ((::abs(itr[1].x - itr[2].x) < stala) && (::abs(itr[1].y - itr[2].y) > stala)) {
 					//cout << "Druga linia" << endl;
 					conditions2++;
 				}
@@ -410,15 +409,15 @@ void Line(VideoCapture cam, int imgwidth, int imgheight, int loRange[], int hiRa
 					path.clear();
 				}*/
 				//Litera N
-				if ((::abs(itr[0].x - itr[1].x) < factor) && (::abs(itr[0].y - itr[1].y) > factor)) {
+				if ((::abs(itr[0].x - itr[1].x) < stala) && (::abs(itr[0].y - itr[1].y) > stala)) {
 					//cout << "Pierwsza linia" << endl;
 					conditions3++;
 				}
-				if ((::abs(itr[1].x - itr[2].x) < factor) && (::abs(itr[1].y - itr[2].y) > factor)) {
+				if ((::abs(itr[1].x - itr[2].x) < stala) && (::abs(itr[1].y - itr[2].y) > stala)) {
 					//cout << "Druga linia" << endl;
 					conditions3++;
 				}
-				if ((::abs(itr[2].x - itr[3].x) < factor) && (::abs(itr[2].y - itr[3].y) > factor)) {
+				if ((::abs(itr[2].x - itr[3].x) < stala) && (::abs(itr[2].y - itr[3].y) > stala)) {
 					//cout << "Trzecia linia" << endl;
 					conditions3++;
 				}
@@ -431,15 +430,15 @@ void Line(VideoCapture cam, int imgwidth, int imgheight, int loRange[], int hiRa
 					break;
 				}
 
-				if ((::abs(itr[0].x - itr[1].x) < factor) && (::abs(itr[0].y - itr[1].y) > factor)) {
+				if ((::abs(itr[0].x - itr[1].x) < stala) && (::abs(itr[0].y - itr[1].y) > stala)) {
 					//cout << "Pierwsza linia" << endl;
 					conditions3++;
 				}
-				if ((::abs(itr[1].x - itr[2].x) > factor) && (::abs(itr[1].y - itr[2].y) > factor)) {
+				if ((::abs(itr[1].x - itr[2].x) > stala) && (::abs(itr[1].y - itr[2].y) > stala)) {
 					//cout << "Druga linia" << endl;
 					conditions3++;
 				}
-				if ((::abs(itr[2].x - itr[3].x) > factor) && (::abs(itr[2].y - itr[3].y) > factor)) {
+				if ((::abs(itr[2].x - itr[3].x) > stala) && (::abs(itr[2].y - itr[3].y) > stala)) {
 					//cout << "Trzecia linia" << endl;
 					conditions3++;
 				}
