@@ -13,49 +13,6 @@ using namespace std;
 int counter;
 Mat backgroundX;
 
-/*
-void Background(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], int hiRange2[])
-{
-	int loRangeX[3] = { 0,0,124 };
-	int hiRangeX[3] = { 204,115,255 };
-
-	namedWindow("jakostam", CV_WINDOW_AUTOSIZE);
-	createTrackbar("loRange0", "jakostam", &(loRangeX[0]), 255);
-	createTrackbar("loRange1", "jakostam", &(loRangeX[1]), 255);
-	createTrackbar("loRange2", "jakostam", &(loRangeX[2]), 255);
-	createTrackbar("hiRange0", "jakostam", &(hiRangeX[0]), 255);
-	createTrackbar("hiRange1", "jakostam", &(hiRangeX[1]), 255);
-	createTrackbar("hiRange2", "jakostam", &(hiRangeX[2]), 255);
-	VideoCapture camera(0);
-
-	/*if (counter < 1)
-	{
-		cout << "To pierwsze tło" << endl;
-	}*/
-/*
-	Mat backgroundX;
-
-	if (counter = 1)
-	{
-		backgroundX = imread("plaza.jpg", CV_LOAD_IMAGE_COLOR);
-	}
-	if (counter = 2)
-	{
-		backgroundX = imread("twojastara.jpg", CV_LOAD_IMAGE_COLOR);
-	}
-	if (counter = 3)
-	{
-		backgroundX = imread("szczelanina.jpg", CV_LOAD_IMAGE_COLOR);
-	}
-	if (counter = 4)
-	{
-		backgroundX = imread("konstytucja.jpg", CV_LOAD_IMAGE_COLOR);
-	}
-	/*if (counter > 4)
-	{
-		cout << "To ostatnie tło" << endl;
-	}*/
-
 void Background1(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], int hiRange2[])
 {
 	int loRangeX[3] = { 0,0,124 };
@@ -77,7 +34,7 @@ void Background1(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], 
 	while (waitKey(30) != 27) {
 		Mat frame;
 		Mat backgroundScaled;
-		Mat frameMask, frameNegMask;
+		Mat Mask, frameNegMask;
 		Mat frameWithMask, backgroundScaledWithMask;
 		Mat frameN;
 		cam >> frame;
@@ -85,15 +42,15 @@ void Background1(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], 
 
 
 
-		resize(backgroundX, backgroundScaled, { frame.cols, frame.rows });
-		cvtColor(frame, frameMask, CV_RGB2HSV);
-		inRange(frameMask, Scalar(loRangeX[0], loRangeX[1], loRangeX[2]),
+		resize(backgroundX, backgroundScaled, { frame.cols, frame.rows }); //dopasowanie rozmiaru
+		cvtColor(frame, Mask, CV_RGB2HSV);
+		inRange(Mask, Scalar(loRangeX[0], loRangeX[1], loRangeX[2]),
 		Scalar(hiRangeX[0], hiRangeX[1], hiRangeX[2]), frameNegMask);
 		
 		Mat structuringElement = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
 
-		bitwise_not(frameNegMask, frameMask); // negacja bitów w tablicy
-		frame.copyTo(frameWithMask, frameMask); // copy with mask (keying)
+		bitwise_not(frameNegMask, Mask); // negacja bitów w tablicy
+		frame.copyTo(frameWithMask, Mask); // copy with mask (keying)
 		backgroundScaled.copyTo(backgroundScaledWithMask, frameNegMask);
 
 		frameN = backgroundScaledWithMask + frameWithMask;
@@ -117,13 +74,13 @@ void Background2(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], 
 
 	Mat backgroundX;
 
-	 backgroundX = imread("twojastara.jpg", CV_LOAD_IMAGE_COLOR);
+	 backgroundX = imread("costam.jpg", CV_LOAD_IMAGE_COLOR);
 
 
 	while (waitKey(30) != 27) {
 		Mat frame;
 		Mat backgroundScaled;
-		Mat frameMask, frameNegMask;
+		Mat Mask, NegMask;
 		Mat frameWithMask, backgroundScaledWithMask;
 		Mat meinniceplace;
 		cam >> frame;
@@ -131,15 +88,15 @@ void Background2(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], 
 
 
 		resize(backgroundX, backgroundScaled, { frame.cols, frame.rows });
-		cvtColor(frame, frameMask, CV_RGB2HSV);
-		inRange(frameMask, Scalar(loRangeX[0], loRangeX[1], loRangeX[2]),
-			Scalar(hiRangeX[0], hiRangeX[1], hiRangeX[2]), frameNegMask);
+		cvtColor(frame, Mask, CV_RGB2HSV);
+		inRange(Mask, Scalar(loRangeX[0], loRangeX[1], loRangeX[2]),
+			Scalar(hiRangeX[0], hiRangeX[1], hiRangeX[2]), NegMask);
 
 		Mat structuringElement = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
 
-		bitwise_not(frameNegMask, frameMask); // negation
-		frame.copyTo(frameWithMask, frameMask); // copy with mask (keying)
-		backgroundScaled.copyTo(backgroundScaledWithMask, frameNegMask);
+		bitwise_not(NegMask, Mask); // negation
+		frame.copyTo(frameWithMask, Mask); // copy with mask (keying)
+		backgroundScaled.copyTo(backgroundScaledWithMask, NegMask);
 
 		meinniceplace = backgroundScaledWithMask + frameWithMask;
 		imshow("tlo", meinniceplace);
@@ -148,8 +105,16 @@ void Background2(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], 
 
 void Background3(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], int hiRange2[])
 {
-	int loRangeX[3] = { 0,0,61 };
-	int hiRangeX[3] = { 176,42,166 };
+	int a = 10;
+	int b = 0;
+	int c = 75;
+
+	int d = 255;
+	int e = 45;
+	int f = 255;
+
+	int loRangeX[3] = { a,b,c };
+	int hiRangeX[3] = { d,e,f };
 
 	namedWindow("tlo", CV_WINDOW_AUTOSIZE);
 	createTrackbar("loRange0", "tlo", &(loRangeX[0]), 255);
@@ -160,8 +125,8 @@ void Background3(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], 
 	createTrackbar("hiRange2", "tlo", &(hiRangeX[2]), 255);
 	VideoCapture camera(0);
 
-	int loRangeG[3] = { 0,0,61 };
-	int hiRangeG[3] = { 176,42,166 };
+	int loRangeG[3] = { a,b,c };
+	int hiRangeG[3] = { d,e,f };
 
 	namedWindow("kopia", CV_WINDOW_AUTOSIZE);
 	createTrackbar("loRange0", "kopia", &(loRangeX[0]), 255);
@@ -171,142 +136,8 @@ void Background3(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], 
 	createTrackbar("hiRange1", "kopia", &(hiRangeX[1]), 255);
 	createTrackbar("hiRange2", "kopia", &(hiRangeX[2]), 255);
 
-	int loRangeT[3] = { 0,0,61 };
-	int hiRangeT[3] = { 176,42,166 };
-
-	/*namedWindow("dwójka", CV_WINDOW_AUTOSIZE);
-	createTrackbar("loRange0", "dwójka", &(loRangeX[0]), 255);
-	createTrackbar("loRange1", "dwójka", &(loRangeX[1]), 255);
-	createTrackbar("loRange2", "dwójka", &(loRangeX[2]), 255);
-	createTrackbar("hiRange0", "dwójka", &(hiRangeX[0]), 255);
-	createTrackbar("hiRange1", "dwójka", &(hiRangeX[1]), 255);
-	createTrackbar("hiRange2", "dwójka", &(hiRangeX[2]), 255);
-
-	int loRangeH[3] = { 0,0,42 };
-	int hiRangeH[3] = { 82,255,255 };
-
-	namedWindow("trójka", CV_WINDOW_AUTOSIZE);
-	createTrackbar("loRange0", "trójka", &(loRangeX[0]), 255);
-	createTrackbar("loRange1", "trójka", &(loRangeX[1]), 255);
-	createTrackbar("loRange2", "trójka", &(loRangeX[2]), 255);
-	createTrackbar("hiRange0", "trójka", &(hiRangeX[0]), 255);
-	createTrackbar("hiRange1", "trójka", &(hiRangeX[1]), 255);
-	createTrackbar("hiRange2", "trójka", &(hiRangeX[2]), 255);
-
-	int loRangeQ[3] = { 0,0,42 };
-	int hiRangeQ[3] = { 82,255,255 };
-
-	namedWindow("czwórka", CV_WINDOW_AUTOSIZE);
-	createTrackbar("loRange0", "czwórka", &(loRangeX[0]), 255);
-	createTrackbar("loRange1", "czwórka", &(loRangeX[1]), 255);
-	createTrackbar("loRange2", "czwórka", &(loRangeX[2]), 255);
-	createTrackbar("hiRange0", "czwórka", &(hiRangeX[0]), 255);
-	createTrackbar("hiRange1", "czwórka", &(hiRangeX[1]), 255);
-	createTrackbar("hiRange2", "czwórka", &(hiRangeX[2]), 255);*/
-
-	/*int loRangeP[3] = { 0,0,42 };
-	int hiRangeP[3] = { 82,255,255 };
-
-	namedWindow("piatka", CV_WINDOW_AUTOSIZE);
-	createTrackbar("loRange0", "piatka", &(loRangeX[0]), 255);
-	createTrackbar("loRange1", "piatka", &(loRangeX[1]), 255);
-	createTrackbar("loRange2", "piatka", &(loRangeX[2]), 255);
-	createTrackbar("hiRange0", "piatka", &(hiRangeX[0]), 255);
-	createTrackbar("hiRange1", "piatka", &(hiRangeX[1]), 255);
-	createTrackbar("hiRange2", "piatka", &(hiRangeX[2]), 255);
-
-	int loRangeK[3] = { 0,0,42 };
-	int hiRangeK[3] = { 82,255,255 };
-
-	namedWindow("szostka", CV_WINDOW_AUTOSIZE);
-	createTrackbar("loRange0", "szostka", &(loRangeX[0]), 255);
-	createTrackbar("loRange1", "szostka", &(loRangeX[1]), 255);
-	createTrackbar("loRange2", "szostka", &(loRangeX[2]), 255);
-	createTrackbar("hiRange0", "szostka", &(hiRangeX[0]), 255);
-	createTrackbar("hiRange1", "szostka", &(hiRangeX[1]), 255);
-	createTrackbar("hiRange2", "szostka", &(hiRangeX[2]), 255);*/
-
-	Mat backgroundX;
-
-	 backgroundX = imread("szczelanina.jpg", CV_LOAD_IMAGE_COLOR);
-
-	while (waitKey(30) != 27) {
-		Mat frame;
-		Mat backgroundScaled;
-		Mat frameMask, frameNegMask;
-		Mat frameWithMask, backgroundScaledWithMask;
-		Mat meinniceplace;
-		cam >> frame;
-		flip(frame, frame, 1);
-
-
-		resize(backgroundX, backgroundScaled, { frame.cols, frame.rows });
-		cvtColor(frame, frameMask, CV_RGB2HSV);
-		inRange(frameMask, Scalar(loRangeX[0], loRangeX[1], loRangeX[2]),
-			Scalar(hiRangeX[0], hiRangeX[1], hiRangeX[2]), frameNegMask);
-
-		int dilation_size = 2;
-		auto structElem = getStructuringElement(MORPH_ELLIPSE,
-			Size(2 * dilation_size + 1, 2 * dilation_size + 1),
-			Point(dilation_size, dilation_size)); //wypełnianie w obiektach
-
-		Mat structuringElement = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
-		morphologyEx(frame, frame, MORPH_CLOSE, structuringElement);
-
-		bitwise_not(frameNegMask, frameMask); // negation
-		frame.copyTo(frameWithMask, frameMask); // copy with mask (keying)
-		backgroundScaled.copyTo(backgroundScaledWithMask, frameNegMask);
-
-		meinniceplace = backgroundScaledWithMask + frameWithMask;
-		//imshow("tlo", frameN);
-		Mat kopia = meinniceplace.clone();
-		//imshow("jakostam", frameN);
-		//destroyWindow("jakostam");
-		//imshow("kopia", kopia);
-		/*Mat dwójka = kopia.clone();
-		Mat trójka = dwójka.clone();
-		Mat czwórka = trójka.clone();*/
-		/*Mat dwójka; kopia.copyTo(dwójka);
-		Mat trójka; dwójka.copyTo(trójka);
-		Mat czwórka; trójka.copyTo(czwórka);*/
-		/*Mat piatka = czwórka.clone();
-		Mat szostka = piatka.clone();*/
-		imshow("kopia", kopia);
-
-		if (waitKey(30) == 32)
-		{
-			imwrite("screenshot.jpg", kopia);
-		}
-	}
-}
-
-void Background4(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], int hiRange2[])
-{
-	int loRangeX[3] = { 0,0,42 };
-	int hiRangeX[3] = { 82,255,255 };
-
-	namedWindow("tlo", CV_WINDOW_AUTOSIZE);
-	createTrackbar("loRange0", "tlo", &(loRangeX[0]), 255);
-	createTrackbar("loRange1", "tlo", &(loRangeX[1]), 255);
-	createTrackbar("loRange2", "tlo", &(loRangeX[2]), 255);
-	createTrackbar("hiRange0", "tlo", &(hiRangeX[0]), 255);
-	createTrackbar("hiRange1", "tlo", &(hiRangeX[1]), 255);
-	createTrackbar("hiRange2", "tlo", &(hiRangeX[2]), 255);
-	VideoCapture camera(0);
-
-	int loRangeG[3] = { 0,0,42 };
-	int hiRangeG[3] = { 82,255,255 };
-
-	namedWindow("kopia", CV_WINDOW_AUTOSIZE);
-	createTrackbar("loRange0", "kopia", &(loRangeX[0]), 255);
-	createTrackbar("loRange1", "kopia", &(loRangeX[1]), 255);
-	createTrackbar("loRange2", "kopia", &(loRangeX[2]), 255);
-	createTrackbar("hiRange0", "kopia", &(hiRangeX[0]), 255);
-	createTrackbar("hiRange1", "kopia", &(hiRangeX[1]), 255);
-	createTrackbar("hiRange2", "kopia", &(hiRangeX[2]), 255);
-
-	int loRangeT[3] = { 0,0,42 };
-	int hiRangeT[3] = { 82,255,255 };
+	int loRangeT[3] = { a,b,c };
+	int hiRangeT[3] = { d,e,f };
 
 	namedWindow("dwójka", CV_WINDOW_AUTOSIZE);
 	createTrackbar("loRange0", "dwójka", &(loRangeX[0]), 255);
@@ -316,8 +147,8 @@ void Background4(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], 
 	createTrackbar("hiRange1", "dwójka", &(hiRangeX[1]), 255);
 	createTrackbar("hiRange2", "dwójka", &(hiRangeX[2]), 255);
 
-	int loRangeH[3] = { 0,0,42 };
-	int hiRangeH[3] = { 82,255,255 };
+	int loRangeH[3] = { a,b,c };
+	int hiRangeH[3] = { d,e,f };
 
 	namedWindow("trójka", CV_WINDOW_AUTOSIZE);
 	createTrackbar("loRange0", "trójka", &(loRangeX[0]), 255);
@@ -327,8 +158,8 @@ void Background4(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], 
 	createTrackbar("hiRange1", "trójka", &(hiRangeX[1]), 255);
 	createTrackbar("hiRange2", "trójka", &(hiRangeX[2]), 255);
 
-	int loRangeQ[3] = { 0,0,42 };
-	int hiRangeQ[3] = { 82,255,255 };
+	int loRangeQ[3] = { a,b,c };
+	int hiRangeQ[3] = { d,e,f };
 
 	namedWindow("czwórka", CV_WINDOW_AUTOSIZE);
 	createTrackbar("loRange0", "czwórka", &(loRangeX[0]), 255);
@@ -338,8 +169,8 @@ void Background4(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], 
 	createTrackbar("hiRange1", "czwórka", &(hiRangeX[1]), 255);
 	createTrackbar("hiRange2", "czwórka", &(hiRangeX[2]), 255);
 
-	/*int loRangeP[3] = { 0,0,42 };
-	int hiRangeP[3] = { 82,255,255 };
+	int loRangeP[3] = { a,b,c };
+	int hiRangeP[3] = { d,e,f };
 
 	namedWindow("piatka", CV_WINDOW_AUTOSIZE);
 	createTrackbar("loRange0", "piatka", &(loRangeX[0]), 255);
@@ -349,8 +180,8 @@ void Background4(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], 
 	createTrackbar("hiRange1", "piatka", &(hiRangeX[1]), 255);
 	createTrackbar("hiRange2", "piatka", &(hiRangeX[2]), 255);
 
-	int loRangeK[3] = { 0,0,42 };
-	int hiRangeK[3] = { 82,255,255 };
+	int loRangeK[3] = { a,b,c };
+	int hiRangeK[3] = { d,e,f };
 
 	namedWindow("szostka", CV_WINDOW_AUTOSIZE);
 	createTrackbar("loRange0", "szostka", &(loRangeX[0]), 255);
@@ -358,7 +189,155 @@ void Background4(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], 
 	createTrackbar("loRange2", "szostka", &(loRangeX[2]), 255);
 	createTrackbar("hiRange0", "szostka", &(hiRangeX[0]), 255);
 	createTrackbar("hiRange1", "szostka", &(hiRangeX[1]), 255);
-	createTrackbar("hiRange2", "szostka", &(hiRangeX[2]), 255);*/
+	createTrackbar("hiRange2", "szostka", &(hiRangeX[2]), 255);
+
+
+
+	Mat backgroundX;
+
+	backgroundX = imread("szczelanina.jpg", CV_LOAD_IMAGE_COLOR);
+
+
+	while (waitKey(30) != 27) {
+		Mat frame;
+		Mat backgroundScaled;
+		Mat Mask, NegMask;
+		Mat frameWithMask, backgroundScaledWithMask;
+		Mat meinniceplace;
+		cam >> frame;
+		flip(frame, frame, 1);
+
+		resize(backgroundX, backgroundScaled, { frame.cols, frame.rows });
+		cvtColor(frame, Mask, CV_RGB2HSV);
+		inRange(Mask, Scalar(loRangeX[0], loRangeX[1], loRangeX[2]),
+			Scalar(hiRangeX[0], hiRangeX[1], hiRangeX[2]), NegMask);
+
+		int dilation_size = 1.5;
+		auto structElem = getStructuringElement(MORPH_ELLIPSE,
+			Size(2 * dilation_size + 1, 2 * dilation_size + 1), // rozszezanie
+			Point(dilation_size, dilation_size)); //wypełnianie w obiektach
+
+		Mat structuringElement = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
+		morphologyEx(frame, frame, MORPH_CLOSE, structElem);
+
+		bitwise_not(NegMask, Mask); //negacja bitów w szeregu
+		frame.copyTo(frameWithMask, Mask); // copy with mask (keying)
+		backgroundScaled.copyTo(backgroundScaledWithMask, NegMask);
+
+		meinniceplace = backgroundScaledWithMask + frameWithMask;
+		Mat kopia = meinniceplace.clone();
+		//imshow("jakostam", meinniceplace);
+		//destroyWindow("jakostam");
+		//imshow("kopia", kopia);
+		Mat dwójka = kopia.clone();
+		Mat trójka = dwójka.clone();
+		Mat czwórka = trójka.clone();
+		/*Mat dwójka; kopia.copyTo(dwójka);
+		Mat trójka; dwójka.copyTo(trójka);
+		Mat czwórka; trójka.copyTo(czwórka);*/
+		Mat piatka = czwórka.clone();
+		Mat szostka = piatka.clone();
+		imshow("piatka", piatka);
+		/*
+		if (waitKey(30) == 32)
+		{
+		imwrite("screenshot.jpg", czwórka);
+		}
+		*/
+		if (!waitKey(30) == 27)
+		{
+			break;
+		}
+	}
+}
+
+void Background4(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], int hiRange2[])
+{
+	int a = 10;
+	int b = 0;
+	int c = 75;
+
+	int d = 255;
+	int e = 45;
+	int f = 255;
+
+	int loRangeX[3] = { a,b,c };
+	int hiRangeX[3] = { d,e,f };
+
+	namedWindow("tlo", CV_WINDOW_AUTOSIZE);
+	createTrackbar("loRange0", "tlo", &(loRangeX[0]), 255);
+	createTrackbar("loRange1", "tlo", &(loRangeX[1]), 255);
+	createTrackbar("loRange2", "tlo", &(loRangeX[2]), 255);
+	createTrackbar("hiRange0", "tlo", &(hiRangeX[0]), 255);
+	createTrackbar("hiRange1", "tlo", &(hiRangeX[1]), 255);
+	createTrackbar("hiRange2", "tlo", &(hiRangeX[2]), 255);
+	VideoCapture camera(0);
+
+	int loRangeG[3] = { a,b,c };
+	int hiRangeG[3] = { d,e,f };
+
+	namedWindow("kopia", CV_WINDOW_AUTOSIZE);
+	createTrackbar("loRange0", "kopia", &(loRangeX[0]), 255);
+	createTrackbar("loRange1", "kopia", &(loRangeX[1]), 255);
+	createTrackbar("loRange2", "kopia", &(loRangeX[2]), 255);
+	createTrackbar("hiRange0", "kopia", &(hiRangeX[0]), 255);
+	createTrackbar("hiRange1", "kopia", &(hiRangeX[1]), 255);
+	createTrackbar("hiRange2", "kopia", &(hiRangeX[2]), 255);
+
+	int loRangeT[3] = { a,b,c };
+	int hiRangeT[3] = { d,e,f };
+
+	namedWindow("dwójka", CV_WINDOW_AUTOSIZE);
+	createTrackbar("loRange0", "dwójka", &(loRangeX[0]), 255);
+	createTrackbar("loRange1", "dwójka", &(loRangeX[1]), 255);
+	createTrackbar("loRange2", "dwójka", &(loRangeX[2]), 255);
+	createTrackbar("hiRange0", "dwójka", &(hiRangeX[0]), 255);
+	createTrackbar("hiRange1", "dwójka", &(hiRangeX[1]), 255);
+	createTrackbar("hiRange2", "dwójka", &(hiRangeX[2]), 255);
+
+	int loRangeH[3] = { a,b,c };
+	int hiRangeH[3] = { d,e,f };
+
+	namedWindow("trójka", CV_WINDOW_AUTOSIZE);
+	createTrackbar("loRange0", "trójka", &(loRangeX[0]), 255);
+	createTrackbar("loRange1", "trójka", &(loRangeX[1]), 255);
+	createTrackbar("loRange2", "trójka", &(loRangeX[2]), 255);
+	createTrackbar("hiRange0", "trójka", &(hiRangeX[0]), 255);
+	createTrackbar("hiRange1", "trójka", &(hiRangeX[1]), 255);
+	createTrackbar("hiRange2", "trójka", &(hiRangeX[2]), 255);
+
+	int loRangeQ[3] = { a,b,c };
+	int hiRangeQ[3] = { d,e,f };
+
+	namedWindow("czwórka", CV_WINDOW_AUTOSIZE);
+	createTrackbar("loRange0", "czwórka", &(loRangeX[0]), 255);
+	createTrackbar("loRange1", "czwórka", &(loRangeX[1]), 255);
+	createTrackbar("loRange2", "czwórka", &(loRangeX[2]), 255);
+	createTrackbar("hiRange0", "czwórka", &(hiRangeX[0]), 255);
+	createTrackbar("hiRange1", "czwórka", &(hiRangeX[1]), 255);
+	createTrackbar("hiRange2", "czwórka", &(hiRangeX[2]), 255);
+
+	int loRangeP[3] = { a,b,c };
+	int hiRangeP[3] = { d,e,f };
+
+	namedWindow("piatka", CV_WINDOW_AUTOSIZE);
+	createTrackbar("loRange0", "piatka", &(loRangeX[0]), 255);
+	createTrackbar("loRange1", "piatka", &(loRangeX[1]), 255);
+	createTrackbar("loRange2", "piatka", &(loRangeX[2]), 255);
+	createTrackbar("hiRange0", "piatka", &(hiRangeX[0]), 255);
+	createTrackbar("hiRange1", "piatka", &(hiRangeX[1]), 255);
+	createTrackbar("hiRange2", "piatka", &(hiRangeX[2]), 255);
+
+	int loRangeK[3] = { a,b,c };
+	int hiRangeK[3] = { d,e,f };
+
+	namedWindow("szostka", CV_WINDOW_AUTOSIZE);
+	createTrackbar("loRange0", "szostka", &(loRangeX[0]), 255);
+	createTrackbar("loRange1", "szostka", &(loRangeX[1]), 255);
+	createTrackbar("loRange2", "szostka", &(loRangeX[2]), 255);
+	createTrackbar("hiRange0", "szostka", &(hiRangeX[0]), 255);
+	createTrackbar("hiRange1", "szostka", &(hiRangeX[1]), 255);
+	createTrackbar("hiRange2", "szostka", &(hiRangeX[2]), 255);
 
 	
 
@@ -370,16 +349,16 @@ void Background4(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], 
 	while (waitKey(30) != 27) {
 		Mat frame;
 		Mat backgroundScaled;
-		Mat frameMask, frameNegMask;
+		Mat Mask, NegMask;
 		Mat frameWithMask, backgroundScaledWithMask;
 		Mat meinniceplace;
 		cam >> frame;
 		flip(frame, frame, 1);
 
 		resize(backgroundX, backgroundScaled, { frame.cols, frame.rows });
-		cvtColor(frame, frameMask, CV_RGB2HSV);
-		inRange(frameMask, Scalar(loRangeX[0], loRangeX[1], loRangeX[2]),
-			Scalar(hiRangeX[0], hiRangeX[1], hiRangeX[2]), frameNegMask);
+		cvtColor(frame, Mask, CV_RGB2HSV);
+		inRange(Mask, Scalar(loRangeX[0], loRangeX[1], loRangeX[2]),
+			Scalar(hiRangeX[0], hiRangeX[1], hiRangeX[2]), NegMask);
 
 		int dilation_size = 1.5;
 		auto structElem = getStructuringElement(MORPH_ELLIPSE,
@@ -389,13 +368,13 @@ void Background4(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], 
 		Mat structuringElement = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
 		morphologyEx(frame, frame, MORPH_CLOSE, structElem);
 
-		bitwise_not(frameNegMask, frameMask); //negacja bitów w szeregu
-		frame.copyTo(frameWithMask, frameMask); // copy with mask (keying)
-		backgroundScaled.copyTo(backgroundScaledWithMask, frameNegMask);
+		bitwise_not(NegMask, Mask); //negacja bitów w szeregu
+		frame.copyTo(frameWithMask, Mask); // copy with mask (keying)
+		backgroundScaled.copyTo(backgroundScaledWithMask, NegMask);
 
 		meinniceplace = backgroundScaledWithMask + frameWithMask;
 		Mat kopia = meinniceplace.clone();
-		//imshow("jakostam", frameN);
+		//imshow("jakostam", meinniceplace);
 		//destroyWindow("jakostam");
 		//imshow("kopia", kopia);
 		Mat dwójka = kopia.clone();
@@ -404,13 +383,18 @@ void Background4(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], 
 		/*Mat dwójka; kopia.copyTo(dwójka);
 		Mat trójka; dwójka.copyTo(trójka);
 		Mat czwórka; trójka.copyTo(czwórka);*/
-		/*Mat piatka = czwórka.clone();
-		Mat szostka = piatka.clone();*/
+		Mat piatka = czwórka.clone();
+		Mat szostka = piatka.clone();
 		imshow("czwórka", czwórka);
-
+		/*
 		if (waitKey(30) == 32)
 		{
 			imwrite("screenshot.jpg", czwórka);
+		}
+		*/
+		if (!waitKey(30) == 27)
+		{
+			break;
 		}
 	}
 }
@@ -418,152 +402,135 @@ void Background4(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], 
 
 void Line(VideoCapture cam, int imgwidth, int imgheight, int loRange[], int hiRange[])
 {
-vector < Point > path, newPath;
+	vector < Point > path, newPath;
 
-while (waitKey(30) != 27)
-{
-Mat imgOriginal, frame;
-cam >> frame;//odczyt następnej klatki
-flip(frame, frame, 1);
-imgOriginal = frame.clone();
-int dilation_size = 2;
-
-
-auto structElem = getStructuringElement(MORPH_ELLIPSE,
-Size(2 * dilation_size + 1, 2 * dilation_size + 1),
-Point(dilation_size, dilation_size)); //wypełnianie w obiektach
+	while (waitKey(30) != 27)
+	{
+		Mat imgOriginal, frame;
+		cam >> frame;//odczyt następnej klatki
+		flip(frame, frame, 1);
+		imgOriginal = frame.clone();
+		int dilation_size = 2;
 
 
-cvtColor(frame, frame, COLOR_BGR2HSV);
-inRange(frame, Scalar(loRange[0], loRange[1], loRange[2]), Scalar(hiRange[0], hiRange[1], hiRange[2]), frame);
-Mat structuringElement = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
-morphologyEx(frame, frame, MORPH_CLOSE, structElem);
+		auto structElem = getStructuringElement(MORPH_ELLIPSE,
+			Size(2 * dilation_size + 1, 2 * dilation_size + 1),
+			Point(dilation_size, dilation_size)); //wypełnianie w obiektach
 
-Moments oMoments = moments(frame);
 
-double dM01 = oMoments.m01;
-double dM10 = oMoments.m10;
-double dArea = oMoments.m00;
+		cvtColor(frame, frame, COLOR_BGR2HSV);
+		inRange(frame, Scalar(loRange[0], loRange[1], loRange[2]), Scalar(hiRange[0], hiRange[1], hiRange[2]), frame);
+		Mat structuringElement = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
+		morphologyEx(frame, frame, MORPH_CLOSE, structElem);
 
-if (dArea > 1000)//Określenie rozmiarów obiektu
-{//Wyznaczanie środka obiektu
-int x1 = dM10 / dArea;
-int y1 = dM01 / dArea;
+		Moments oMoments = moments(frame);
 
-path.push_back({ x1, y1 });//Dodanie punktu do listy
+		double dM01 = oMoments.m01;
+		double dM10 = oMoments.m10;
+		double dArea = oMoments.m00;
 
-vector <Point2f> pathN;
-approxPolyDP(vector<Point2f>(path.begin(), path.end()), pathN, 40, false); // szacowana krzywizna/wielokąt przy użyciu innej krzywizny/wielokątu
+		if (dArea > 1000)//Określenie rozmiarów obiektu
+		{//Wyznaczanie środka obiektu
+			int x1 = dM10 / dArea;
+			int y1 = dM01 / dArea;
 
-newPath.clear();
-for (auto &point : pathN)
-newPath.push_back({ (int)point.x, (int)point.y });
+			path.push_back({ x1, y1 });//Dodanie punktu do listy
 
-if (newPath.size() >= 4) {
-vector < Point > itr(newPath.end() - 4, newPath.end());
-int conditions = 0;
-int conditions2 = 0;
-int conditions3 = 0;
-int conditions4 = 0;
+			vector <Point2f> pathN;
+			approxPolyDP(vector<Point2f>(path.begin(), path.end()), pathN, 40, false); // szacowana krzywizna/wielokąt przy użyciu innej krzywizny/wielokątu
 
-if (newPath.size() >= 50) {
+			newPath.clear();
+			for (auto &point : pathN)
+				newPath.push_back({ (int)point.x, (int)point.y });
 
-	path.clear();
+			if (newPath.size() >= 4) {
+				vector < Point > itr(newPath.end() - 4, newPath.end());
+				int conditions = 0;
+				int conditions2 = 0;
+				int conditions3 = 0;
+				int conditions4 = 0;
 
-}
+				if (newPath.size() >= 20) {
 
-double factor = (::abs(itr[0].x - itr[1].x) + ::abs(itr[0].y - itr[1].y)) * 2 / 3;
+					path.clear();
 
-//Litera Z
-if ((::abs(itr[0].x - itr[1].x) > factor) && (::abs(itr[0].y - itr[1].y) < factor)) {
-//cout << "Pierwsza linia" << endl;
-conditions++;
-}
-if ((::abs(itr[1].x - itr[2].x) > factor) && (::abs(itr[1].y - itr[2].y) > factor)) {
-//cout << "Druga linia" << endl;
-conditions++;
-}
-if ((::abs(itr[2].x - itr[3].x) > factor) && (::abs(itr[2].y - itr[3].y) < factor)) {
-//cout << "Trzecia linia" << endl;
-conditions++;
-}
+				}
 
-if (conditions == 3) {
-	cout << "Jest Z" << endl;
-	Background1(cam, 600, 400, loRange, hiRange);
+				double stala = (::abs(itr[0].x - itr[1].x) + ::abs(itr[0].y - itr[1].y)) * 0.5;
+				
+				//Litera Z
 
-	path.clear();
-}
-//Litera L
-if ((::abs(itr[0].x - itr[1].x) > factor) && (::abs(itr[0].y - itr[1].y) < factor)) {
-	//cout << "Pierwsza linia" << endl;
-	conditions2++;
-}
-if ((::abs(itr[1].x - itr[2].x) > factor) && (::abs(itr[1].y - itr[2].y) > factor)) {
-	//cout << "Druga linia" << endl;
-	conditions++;
-}
-if ((::abs(itr[1].x - itr[2].x) < factor) && (::abs(itr[1].y - itr[2].y) > factor)) {
-	//cout << "Druga linia" << endl;
-	conditions3++;
-}
+				if ((::abs(itr[0].x - itr[1].x) > stala) && (::abs(itr[0].y - itr[1].y) < stala)) {
+					//cout << "Pierwsza linia" << endl;
+					conditions++;
+				}
+				if ((::abs(itr[1].x - itr[2].x) > stala) && (::abs(itr[1].y - itr[2].y) > stala)) {
+					//cout << "Druga linia" << endl;
+					conditions++;
+				}
+				if ((::abs(itr[2].x - itr[3].x) > stala) && (::abs(itr[2].y - itr[3].y) < stala)) {
+					//cout << "Trzecia linia" << endl;
+					conditions++;
+				}
+				if (conditions == 3) {
+					cout << "Jest Z" << endl;
+					Background2(cam, 600, 400, loRange, hiRange);
 
-if (conditions2 == 3) {
-cout << "Jest L" << endl;
-Background4(cam, 600, 400, loRange, hiRange);
-path.clear();
-}
-//Litera N
-if ((::abs(itr[0].x - itr[1].x) < factor) && (::abs(itr[0].y - itr[1].y) > factor)) {
-	//cout << "Pierwsza linia" << endl;
-	conditions3++;
-}
-if ((::abs(itr[1].x - itr[2].x) < factor) && (::abs(itr[1].y - itr[2].y) > factor)) {
-	//cout << "Druga linia" << endl;
-	conditions3++;
-}
-if ((::abs(itr[2].x - itr[3].x) < factor) && (::abs(itr[2].y - itr[3].y) > factor)) {
-	//cout << "Trzecia linia" << endl;
-	conditions3++;
-}
+					path.clear();
+					//Litera N
 
-if (conditions3 == 3) {
-cout << "Jest N" << endl;
-counter = 3;
-Background3(cam, 600, 400, loRange, hiRange);
-path.clear();
-}
+					if ((::abs(itr[0].x - itr[1].x) < stala) && (::abs(itr[0].y - itr[1].y) > stala)) {
+						//cout << "Pierwsza linia" << endl;
+						conditions3++;
+					}
 
-if ((::abs(itr[0].x - itr[1].x) < factor) && (::abs(itr[0].y - itr[1].y) > factor)) {
-	//cout << "Pierwsza linia" << endl;
-	conditions4++;
-}
-if ((::abs(itr[1].x - itr[2].x) > factor) && (::abs(itr[1].y - itr[2].y) > factor)) {
-	//cout << "Druga linia" << endl;
-	conditions4++;
-}
-if ((::abs(itr[2].x - itr[3].x) > factor) && (::abs(itr[2].y - itr[3].y) > factor)) {
-	//cout << "Trzecia linia" << endl;
-	conditions4++;
-}
+					if ((::abs(itr[1].x - itr[2].x) < stala) && (::abs(itr[1].y - itr[2].y) > stala)) {
+						//cout << "Druga linia" << endl;
+						conditions3++;
+					}
+					if ((::abs(itr[2].x - itr[3].x) < stala) && (::abs(itr[2].y - itr[3].y) > stala)) {
+						//cout << "Trzecia linia" << endl;
+						conditions3++;
+					}
 
-if (conditions4 == 5) {
-	cout << "Jest C" << endl;
-	counter = 3;
-	//Background2(cam, 600, 400, loRange, hiRange);
-	path.clear();
-}
-cout << "  x = " << x1 << "  y = " << y1 << endl;
-}
-}
+					if (conditions3 == 3) {
+						cout << "Jest N" << endl;
+						counter = 3;
+						Background3(cam, 600, 400, loRange, hiRange);
+						path.clear();
+					}
+					
+					//Litera U
+					if ((::abs(itr[0].x - itr[1].x) < stala) && (::abs(itr[0].y - itr[1].y) > stala)) {
+						//cout << "Pierwsza linia" << endl;
+						conditions4++;
+					}
+					if ((::abs(itr[1].x - itr[2].x) < stala) && (::abs(itr[1].y - itr[2].y) < stala)) {
+						//cout << "Druga linia" << endl;
+						conditions4++;
+					}
+					if ((::abs(itr[2].x - itr[3].x) < stala) && (::abs(itr[2].y - itr[3].y) > stala)) {
+						//cout << "Trzecia linia" << endl;
+						conditions4++;
+					}
 
-polylines(imgOriginal, { newPath }, false, Scalar(0, 255, 0), 2);
+					if (conditions4 == 3) {
+						cout << "Jest U" << endl;
+						Background2(cam, 600, 400, loRange, hiRange);
+						path.clear();
+					}
+					//cout << "  x = " << x1 << "  y = " << y1 << endl;
+				}
+			}
 
-imshow("colourDetection", frame);
-imshow("camera", imgOriginal);
+			polylines(imgOriginal, { newPath }, false, Scalar(0, 255, 0), 2);
 
-}
-}
+			imshow("colourDetection", frame);
+			imshow("camera", imgOriginal);
+
+		}
+	}
+//}
 
 int main()
 {
@@ -575,8 +542,8 @@ if (cam.isOpened() == false)  //Sprawdzanie czy jest obraz z kamery
 	return 0;
 }
 
-int loRange[3] = { 51,112,113 };
-int hiRange[3] = { 76,145,255 };
+int loRange[3] = { 44,149,45 };
+int hiRange[3] = { 153,204,110 };
 
 namedWindow("colourDetection", CV_WINDOW_AUTOSIZE);
 createTrackbar("loRange0", "colourDetection", &(loRange[0]),
