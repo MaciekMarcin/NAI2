@@ -13,116 +13,111 @@ using namespace std;
 int counter;
 Mat backgroundX;
 
-
-
-void backgroundSubtraction(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], int hiRange2[])
+/*
+void Background(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], int hiRange2[])
 {
-	int loRangeY[3] = { 0,0,124 };
-	int hiRangeY[3] = { 190,115,255 };
+	int loRangeX[3] = { 0,0,124 };
+	int hiRangeX[3] = { 204,115,255 };
 
 	namedWindow("jakostam", CV_WINDOW_AUTOSIZE);
-	/*createTrackbar("loRange0a", "jakostam", &(loRangeZ[0]), 255);
-	createTrackbar("loRange1a", "jakostam", &(loRangeZ[1]), 255);
-	createTrackbar("loRange2a", "jakostam", &(loRangeZ[2]), 255);
-	createTrackbar("hiRange0a", "jakostam", &(hiRangeZ[0]), 255);
-	createTrackbar("hiRange1a", "jakostam", &(hiRangeZ[1]), 255);
-	createTrackbar("hiRange2a", "jakostam", &(hiRangeZ[2]), 255);*/
-	createTrackbar("loRange0", "jakostam", &(loRangeY[0]), 255);
-	createTrackbar("loRange1", "jakostam", &(loRangeY[1]), 255);
-	createTrackbar("loRange2", "jakostam", &(loRangeY[2]), 255);
-	createTrackbar("hiRange0", "jakostam", &(hiRangeY[0]), 255);
-	createTrackbar("hiRange1", "jakostam", &(hiRangeY[1]), 255);
-	createTrackbar("hiRange2", "jakostam", &(hiRangeY[2]), 255);
-	//VideoCapture cam(0);
+	createTrackbar("loRange0", "jakostam", &(loRangeX[0]), 255);
+	createTrackbar("loRange1", "jakostam", &(loRangeX[1]), 255);
+	createTrackbar("loRange2", "jakostam", &(loRangeX[2]), 255);
+	createTrackbar("hiRange0", "jakostam", &(hiRangeX[0]), 255);
+	createTrackbar("hiRange1", "jakostam", &(hiRangeX[1]), 255);
+	createTrackbar("hiRange2", "jakostam", &(hiRangeX[2]), 255);
+	VideoCapture camera(0);
 
-	//Mat img; cam >> img;
+	/*if (counter < 1)
+	{
+		cout << "To pierwsze tło" << endl;
+	}*/
+/*
+	Mat backgroundX;
 
+	if (counter = 1)
+	{
+		backgroundX = imread("plaza.jpg", CV_LOAD_IMAGE_COLOR);
+	}
+	if (counter = 2)
+	{
+		backgroundX = imread("twojastara.jpg", CV_LOAD_IMAGE_COLOR);
+	}
+	if (counter = 3)
+	{
+		backgroundX = imread("szczelanina.jpg", CV_LOAD_IMAGE_COLOR);
+	}
+	if (counter = 4)
+	{
+		backgroundX = imread("konstytucja.jpg", CV_LOAD_IMAGE_COLOR);
+	}
+	/*if (counter > 4)
+	{
+		cout << "To ostatnie tło" << endl;
+	}*/
+
+void Background1(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], int hiRange2[])
+{
+	int loRangeX[3] = { 0,0,124 };
+	int hiRangeX[3] = { 204,115,255 };
+
+	namedWindow("tlo", CV_WINDOW_AUTOSIZE);
+	createTrackbar("loRange0", "tlo", &(loRangeX[0]), 255);
+	createTrackbar("loRange1", "tlo", &(loRangeX[1]), 255);
+	createTrackbar("loRange2", "tlo", &(loRangeX[2]), 255);
+	createTrackbar("hiRange0", "tlo", &(hiRangeX[0]), 255);
+	createTrackbar("hiRange1", "tlo", &(hiRangeX[1]), 255);
+	createTrackbar("hiRange2", "tlo", &(hiRangeX[2]), 255);
+	VideoCapture camera(0);
+
+	Mat backgroundX;
+
+		backgroundX = imread("plaza.jpg", CV_LOAD_IMAGE_COLOR);
+
+	while (waitKey(30) != 27) {
+		Mat frame;
+		Mat backgroundScaled;
+		Mat frameMask, frameNegMask;
+		Mat frameWithMask, backgroundScaledWithMask;
+		Mat meinniceplace;
+		cam >> frame;
+		flip(frame, frame, 1);
+
+
+
+		resize(backgroundX, backgroundScaled, { frame.cols, frame.rows });
+		cvtColor(frame, frameMask, CV_RGB2HSV);
+		inRange(frameMask, Scalar(loRangeX[0], loRangeX[1], loRangeX[2]),
+		Scalar(hiRangeX[0], hiRangeX[1], hiRangeX[2]), frameNegMask);
+		
+		Mat structuringElement = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
+
+		bitwise_not(frameNegMask, frameMask); // negacja bitów w tablicy
+		frame.copyTo(frameWithMask, frameMask); // copy with mask (keying)
+		backgroundScaled.copyTo(backgroundScaledWithMask, frameNegMask);
+
+		meinniceplace = backgroundScaledWithMask + frameWithMask;
+		imshow("tlo", meinniceplace);
+	}
 }
-/*
-void Background(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], int hiRange2[])
+
+void Background2(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], int hiRange2[])
 {
 	int loRangeX[3] = { 0,0,124 };
 	int hiRangeX[3] = { 204,115,255 };
 
-	namedWindow("jakostam", CV_WINDOW_AUTOSIZE);
-	createTrackbar("loRange0", "jakostam", &(loRangeX[0]), 255);
-	createTrackbar("loRange1", "jakostam", &(loRangeX[1]), 255);
-	createTrackbar("loRange2", "jakostam", &(loRangeX[2]), 255);
-	createTrackbar("hiRange0", "jakostam", &(hiRangeX[0]), 255);
-	createTrackbar("hiRange1", "jakostam", &(hiRangeX[1]), 255);
-	createTrackbar("hiRange2", "jakostam", &(hiRangeX[2]), 255);
+	namedWindow("tlo", CV_WINDOW_AUTOSIZE);
+	createTrackbar("loRange0", "tlo", &(loRangeX[0]), 255);
+	createTrackbar("loRange1", "tlo", &(loRangeX[1]), 255);
+	createTrackbar("loRange2", "tlo", &(loRangeX[2]), 255);
+	createTrackbar("hiRange0", "tlo", &(hiRangeX[0]), 255);
+	createTrackbar("hiRange1", "tlo", &(hiRangeX[1]), 255);
+	createTrackbar("hiRange2", "tlo", &(hiRangeX[2]), 255);
 	VideoCapture camera(0);
 
-	/*if (counter < 1)
-	{
-		cout << "To pierwsze tło" << endl;
-	}*/
-/*
 	Mat backgroundX;
 
-	if (counter = 1)
-	{
-		backgroundX = imread("plaza.jpg", CV_LOAD_IMAGE_COLOR);
-	}
-	if (counter = 2)
-	{
-		backgroundX = imread("twojastara.jpg", CV_LOAD_IMAGE_COLOR);
-	}
-	if (counter = 3)
-	{
-		backgroundX = imread("szczelanina.jpg", CV_LOAD_IMAGE_COLOR);
-	}
-	if (counter = 4)
-	{
-		backgroundX = imread("konstytucja.jpg", CV_LOAD_IMAGE_COLOR);
-	}
-	/*if (counter > 4)
-	{
-		cout << "To ostatnie tło" << endl;
-	}*/
-
-void Background(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], int hiRange2[])
-{
-	int loRangeX[3] = { 0,0,124 };
-	int hiRangeX[3] = { 204,115,255 };
-
-	namedWindow("jakostam", CV_WINDOW_AUTOSIZE);
-	createTrackbar("loRange0", "jakostam", &(loRangeX[0]), 255);
-	createTrackbar("loRange1", "jakostam", &(loRangeX[1]), 255);
-	createTrackbar("loRange2", "jakostam", &(loRangeX[2]), 255);
-	createTrackbar("hiRange0", "jakostam", &(hiRangeX[0]), 255);
-	createTrackbar("hiRange1", "jakostam", &(hiRangeX[1]), 255);
-	createTrackbar("hiRange2", "jakostam", &(hiRangeX[2]), 255);
-	VideoCapture camera(0);
-
-	/*if (counter < 1)
-	{
-		cout << "To pierwsze tło" << endl;
-	}*/
-/*
-	Mat backgroundX;
-
-	if (counter = 1)
-	{
-		backgroundX = imread("plaza.jpg", CV_LOAD_IMAGE_COLOR);
-	}
-	if (counter = 2)
-	{
-		backgroundX = imread("twojastara.jpg", CV_LOAD_IMAGE_COLOR);
-	}
-	if (counter = 3)
-	{
-		backgroundX = imread("szczelanina.jpg", CV_LOAD_IMAGE_COLOR);
-	}
-	if (counter = 4)
-	{
-		backgroundX = imread("konstytucja.jpg", CV_LOAD_IMAGE_COLOR);
-	}
-	/*if (counter > 4)
-	{
-		cout << "To ostatnie tło" << endl;
-	}*/
-
+	 backgroundX = imread("twojastara.jpg", CV_LOAD_IMAGE_COLOR);
 
 
 	while (waitKey(30) != 27) {
@@ -140,13 +135,6 @@ void Background(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], i
 		inRange(frameMask, Scalar(loRangeX[0], loRangeX[1], loRangeX[2]),
 			Scalar(hiRangeX[0], hiRangeX[1], hiRangeX[2]), frameNegMask);
 
-		/*int dilation_size = 2;
-		auto structElem = getStructuringElement(MORPH_ELLIPSE,
-			Size(2 * dilation_size + 1, 2 * dilation_size + 1),
-			Point(dilation_size, dilation_size));
-		erode(frameNegMask, frameNegMask, structElem);
-		dilate(frameNegMask, frameNegMask, structElem);*/
-		
 		Mat structuringElement = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
 
 		bitwise_not(frameNegMask, frameMask); // negation
@@ -154,9 +142,178 @@ void Background(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], i
 		backgroundScaled.copyTo(backgroundScaledWithMask, frameNegMask);
 
 		meinniceplace = backgroundScaledWithMask + frameWithMask;
-		imshow("jakostam", meinniceplace);
+		imshow("tlo", meinniceplace);
 	}
 }
+
+void Background3(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], int hiRange2[])
+{
+	int loRangeX[3] = { 0,0,124 };
+	int hiRangeX[3] = { 204,115,255 };
+
+	namedWindow("tlo", CV_WINDOW_AUTOSIZE);
+	createTrackbar("loRange0", "tlo", &(loRangeX[0]), 255);
+	createTrackbar("loRange1", "tlo", &(loRangeX[1]), 255);
+	createTrackbar("loRange2", "tlo", &(loRangeX[2]), 255);
+	createTrackbar("hiRange0", "tlo", &(hiRangeX[0]), 255);
+	createTrackbar("hiRange1", "tlo", &(hiRangeX[1]), 255);
+	createTrackbar("hiRange2", "tlo", &(hiRangeX[2]), 255);
+	VideoCapture camera(0);
+
+	Mat backgroundX;
+
+	 backgroundX = imread("szczelanina.jpg", CV_LOAD_IMAGE_COLOR);
+
+	while (waitKey(30) != 27) {
+		Mat frame;
+		Mat backgroundScaled;
+		Mat frameMask, frameNegMask;
+		Mat frameWithMask, backgroundScaledWithMask;
+		Mat meinniceplace;
+		cam >> frame;
+		flip(frame, frame, 1);
+
+
+		resize(backgroundX, backgroundScaled, { frame.cols, frame.rows });
+		cvtColor(frame, frameMask, CV_RGB2HSV);
+		inRange(frameMask, Scalar(loRangeX[0], loRangeX[1], loRangeX[2]),
+			Scalar(hiRangeX[0], hiRangeX[1], hiRangeX[2]), frameNegMask);
+
+		Mat structuringElement = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
+
+		bitwise_not(frameNegMask, frameMask); // negation
+		frame.copyTo(frameWithMask, frameMask); // copy with mask (keying)
+		backgroundScaled.copyTo(backgroundScaledWithMask, frameNegMask);
+
+		meinniceplace = backgroundScaledWithMask + frameWithMask;
+		imshow("tlo", meinniceplace);
+	}
+}
+
+void Background4(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], int hiRange2[])
+{
+	int loRangeX[3] = { 0,0,42 };
+	int hiRangeX[3] = { 82,255,255 };
+
+	namedWindow("tlo", CV_WINDOW_AUTOSIZE);
+	createTrackbar("loRange0", "tlo", &(loRangeX[0]), 255);
+	createTrackbar("loRange1", "tlo", &(loRangeX[1]), 255);
+	createTrackbar("loRange2", "tlo", &(loRangeX[2]), 255);
+	createTrackbar("hiRange0", "tlo", &(hiRangeX[0]), 255);
+	createTrackbar("hiRange1", "tlo", &(hiRangeX[1]), 255);
+	createTrackbar("hiRange2", "tlo", &(hiRangeX[2]), 255);
+	VideoCapture camera(0);
+
+	int loRangeG[3] = { 0,0,42 };
+	int hiRangeG[3] = { 82,255,255 };
+
+	namedWindow("kopia", CV_WINDOW_AUTOSIZE);
+	createTrackbar("loRange0", "kopia", &(loRangeX[0]), 255);
+	createTrackbar("loRange1", "kopia", &(loRangeX[1]), 255);
+	createTrackbar("loRange2", "kopia", &(loRangeX[2]), 255);
+	createTrackbar("hiRange0", "kopia", &(hiRangeX[0]), 255);
+	createTrackbar("hiRange1", "kopia", &(hiRangeX[1]), 255);
+	createTrackbar("hiRange2", "kopia", &(hiRangeX[2]), 255);
+
+	int loRangeT[3] = { 0,0,42 };
+	int hiRangeT[3] = { 82,255,255 };
+
+	namedWindow("dwójka", CV_WINDOW_AUTOSIZE);
+	createTrackbar("loRange0", "dwójka", &(loRangeX[0]), 255);
+	createTrackbar("loRange1", "dwójka", &(loRangeX[1]), 255);
+	createTrackbar("loRange2", "dwójka", &(loRangeX[2]), 255);
+	createTrackbar("hiRange0", "dwójka", &(hiRangeX[0]), 255);
+	createTrackbar("hiRange1", "dwójka", &(hiRangeX[1]), 255);
+	createTrackbar("hiRange2", "dwójka", &(hiRangeX[2]), 255);
+
+	int loRangeH[3] = { 0,0,42 };
+	int hiRangeH[3] = { 82,255,255 };
+
+	namedWindow("trójka", CV_WINDOW_AUTOSIZE);
+	createTrackbar("loRange0", "trójka", &(loRangeX[0]), 255);
+	createTrackbar("loRange1", "trójka", &(loRangeX[1]), 255);
+	createTrackbar("loRange2", "trójka", &(loRangeX[2]), 255);
+	createTrackbar("hiRange0", "trójka", &(hiRangeX[0]), 255);
+	createTrackbar("hiRange1", "trójka", &(hiRangeX[1]), 255);
+	createTrackbar("hiRange2", "trójka", &(hiRangeX[2]), 255);
+
+	int loRangeQ[3] = { 0,0,42 };
+	int hiRangeQ[3] = { 82,255,255 };
+
+	namedWindow("czwórka", CV_WINDOW_AUTOSIZE);
+	createTrackbar("loRange0", "czwórka", &(loRangeX[0]), 255);
+	createTrackbar("loRange1", "czwórka", &(loRangeX[1]), 255);
+	createTrackbar("loRange2", "czwórka", &(loRangeX[2]), 255);
+	createTrackbar("hiRange0", "czwórka", &(hiRangeX[0]), 255);
+	createTrackbar("hiRange1", "czwórka", &(hiRangeX[1]), 255);
+	createTrackbar("hiRange2", "czwórka", &(hiRangeX[2]), 255);
+
+	/*int loRangeP[3] = { 0,0,42 };
+	int hiRangeP[3] = { 82,255,255 };
+
+	namedWindow("piatka", CV_WINDOW_AUTOSIZE);
+	createTrackbar("loRange0", "piatka", &(loRangeX[0]), 255);
+	createTrackbar("loRange1", "piatka", &(loRangeX[1]), 255);
+	createTrackbar("loRange2", "piatka", &(loRangeX[2]), 255);
+	createTrackbar("hiRange0", "piatka", &(hiRangeX[0]), 255);
+	createTrackbar("hiRange1", "piatka", &(hiRangeX[1]), 255);
+	createTrackbar("hiRange2", "piatka", &(hiRangeX[2]), 255);
+
+	int loRangeK[3] = { 0,0,42 };
+	int hiRangeK[3] = { 82,255,255 };
+
+	namedWindow("szostka", CV_WINDOW_AUTOSIZE);
+	createTrackbar("loRange0", "szostka", &(loRangeX[0]), 255);
+	createTrackbar("loRange1", "szostka", &(loRangeX[1]), 255);
+	createTrackbar("loRange2", "szostka", &(loRangeX[2]), 255);
+	createTrackbar("hiRange0", "szostka", &(hiRangeX[0]), 255);
+	createTrackbar("hiRange1", "szostka", &(hiRangeX[1]), 255);
+	createTrackbar("hiRange2", "szostka", &(hiRangeX[2]), 255);*/
+
+	
+
+	Mat backgroundX;
+
+	 backgroundX = imread("konstytucja.jpg", CV_LOAD_IMAGE_COLOR);
+	 
+	 
+	while (waitKey(30) != 27) {
+		Mat frame;
+		Mat backgroundScaled;
+		Mat frameMask, frameNegMask;
+		Mat frameWithMask, backgroundScaledWithMask;
+		Mat meinniceplace;
+		cam >> frame;
+		flip(frame, frame, 1);
+
+		resize(backgroundX, backgroundScaled, { frame.cols, frame.rows });
+		cvtColor(frame, frameMask, CV_RGB2HSV);
+		inRange(frameMask, Scalar(loRangeX[0], loRangeX[1], loRangeX[2]),
+			Scalar(hiRangeX[0], hiRangeX[1], hiRangeX[2]), frameNegMask);
+
+		Mat structuringElement = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
+
+		bitwise_not(frameNegMask, frameMask); //negacja bitów w szeregu
+		frame.copyTo(frameWithMask, frameMask); // copy with mask (keying)
+		backgroundScaled.copyTo(backgroundScaledWithMask, frameNegMask);
+
+		meinniceplace = backgroundScaledWithMask + frameWithMask;
+		Mat kopia = meinniceplace.clone();
+		//imshow("jakostam", meinniceplace);
+		//destroyWindow("jakostam");
+		//imshow("kopia", kopia);
+		Mat dwójka = kopia.clone();
+		Mat trójka = dwójka.clone();
+		Mat czwórka = trójka.clone();
+		/*Mat dwójka; kopia.copyTo(dwójka);
+		Mat trójka; dwójka.copyTo(trójka);
+		Mat czwórka; trójka.copyTo(czwórka);*/
+		/*Mat piatka = czwórka.clone();
+		Mat szostka = piatka.clone();*/
+		imshow("czwórka", czwórka);
+	}
+}
+
 
 void Line(VideoCapture cam, int imgwidth, int imgheight, int loRange[], int hiRange[])
 {
@@ -173,7 +330,7 @@ int dilation_size = 2;
 
 auto structElem = getStructuringElement(MORPH_ELLIPSE,
 Size(2 * dilation_size + 1, 2 * dilation_size + 1),
-Point(dilation_size, dilation_size)); //wypełnianie dziur w obiekcie
+Point(dilation_size, dilation_size)); //wypełnianie w obiektach
 
 
 cvtColor(frame, frame, COLOR_BGR2HSV);
@@ -249,11 +406,11 @@ if ((::abs(itr[1].x - itr[2].x) < factor) && (::abs(itr[1].y - itr[2].y) > facto
 if (conditions2 == 2) {
 cout << "Jest L!!!" << endl;
 counter = 2;
-Background2(cam, 600, 400, loRange, hiRange);
+Background4(cam, 600, 400, loRange, hiRange);
 path.clear();
 }
 //Litera N
-/*if ((::abs(itr[0].x - itr[1].x) < factor) && (::abs(itr[0].y - itr[1].y) > factor)) {
+if ((::abs(itr[0].x - itr[1].x) < factor) && (::abs(itr[0].y - itr[1].y) > factor)) {
 	//cout << "Pierwsza linia" << endl;
 	conditions3++;
 }
@@ -271,7 +428,7 @@ cout << "Jest N!!!" << endl;
 counter = 3;
 Background3(cam, 600, 400, loRange, hiRange);
 path.clear();
-}*/
+}
 
 if ((::abs(itr[0].x - itr[1].x) < factor) && (::abs(itr[0].y - itr[1].y) > factor)) {
 	//cout << "Pierwsza linia" << endl;
