@@ -43,18 +43,18 @@ void Background1(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], 
 
 
 		resize(backgroundX, backgroundScaled, { frame.cols, frame.rows }); //dopasowanie rozmiaru
-		cvtColor(frame, Mask, CV_RGB2HSV);
-		inRange(Mask, Scalar(loRangeX[0], loRangeX[1], loRangeX[2]),
-		Scalar(hiRangeX[0], hiRangeX[1], hiRangeX[2]), frameNegMask);
+		cvtColor(frame, Mask, CV_RGB2HSV);//konwersja z RGB na HSV
+		inRange(Mask, Scalar(loRangeX[0], loRangeX[1], loRangeX[2]), //sprawdzanie elementów między dwoma tablicami
+		Scalar(hiRangeX[0], hiRangeX[1], hiRangeX[2]), frameNegMask); //klasa szablonu dla 4 elementowego wektora
 		
 		Mat structuringElement = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
 
 		bitwise_not(frameNegMask, Mask); // negacja bitów w tablicy
 		frame.copyTo(frameWithMask, Mask); // copy with mask (keying)
-		backgroundScaled.copyTo(backgroundScaledWithMask, frameNegMask);
+		backgroundScaled.copyTo(backgroundScaledWithMask, frameNegMask); //frameNegMask jest kopią z własnymą kopią pixeli
 
 		frameN = backgroundScaledWithMask + frameWithMask;
-		imshow("tlo", frameN);
+		imshow("tlo", frameN);//Pokazuje obraz frameN w oknie "tlo"
 	}
 }
 
@@ -62,7 +62,7 @@ void Background2(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], 
 {
 	int loRangeX[3] = { 0,0,124 };
 	int hiRangeX[3] = { 204,115,255 };
-
+	//Tworzenie trackbara "tlo" z ustalonymi początkowymi współrzędnymim
 	namedWindow("tlo", CV_WINDOW_AUTOSIZE);
 	createTrackbar("loRange0", "tlo", &(loRangeX[0]), 255);
 	createTrackbar("loRange1", "tlo", &(loRangeX[1]), 255);
@@ -92,7 +92,7 @@ void Background2(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], 
 		inRange(Mask, Scalar(loRangeX[0], loRangeX[1], loRangeX[2]),
 			Scalar(hiRangeX[0], hiRangeX[1], hiRangeX[2]), NegMask);
 
-		Mat structuringElement = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
+		Mat structuringElement = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3)); //podaje sie kształt i rozmiar kernela i otrzymuje się oczekiwany kernel
 
 		bitwise_not(NegMask, Mask); // negation
 		frame.copyTo(frameWithMask, Mask); // copy with mask (keying)
@@ -191,7 +191,7 @@ void Background3(VideoCapture cam, int imgwidth, int imgheight, int loRange2[], 
 	createTrackbar("hiRange1", "szostka", &(hiRangeX[1]), 255);
 	createTrackbar("hiRange2", "szostka", &(hiRangeX[2]), 255);
 
-
+	//Kopiowanie tego samego okna HSV przez co daje to lepsze rezultaty
 
 	Mat backgroundX;
 
@@ -474,7 +474,7 @@ void Line(VideoCapture cam, int imgwidth, int imgheight, int loRange[], int hiRa
 				}
 				if (conditions == 3) {
 					cout << "Jest Z" << endl;
-					Background2(cam, 600, 400, loRange, hiRange);
+					Background4(cam, 600, 400, loRange, hiRange);
 
 					path.clear();
 					//Litera N
@@ -530,7 +530,7 @@ void Line(VideoCapture cam, int imgwidth, int imgheight, int loRange[], int hiRa
 
 		}
 	}
-//}
+}
 
 int main()
 {
