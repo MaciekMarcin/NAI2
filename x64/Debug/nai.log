@@ -1,0 +1,5 @@
+﻿  kodnaicpp.cpp
+c:\users\marcin\documents\visual studio 2015\projects\nai\kodnaicpp.cpp(324): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\users\marcin\documents\visual studio 2015\projects\nai\kodnaicpp.cpp(325): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+  nai.vcxproj -> C:\Users\Marcin\documents\visual studio 2015\Projects\nai\x64\Debug\nai.exe
+  nai.vcxproj -> C:\Users\Marcin\documents\visual studio 2015\Projects\nai\x64\Debug\nai.pdb (Partial PDB)
